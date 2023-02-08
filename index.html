@@ -8,6 +8,7 @@
       width: 300px;
       height: 300px;
       border: 1px solid black;
+      margin: 0 auto;
       position: relative;
     }
     #red-arrow {
@@ -32,6 +33,10 @@
       left: 50%;
       transform: translate(-50%, -50%) rotate(0deg);
     }
+    button {
+      display: block;
+      margin: 20px auto;
+    }
   </style>
 </head>
 <body>
@@ -39,57 +44,27 @@
     <div id="red-arrow"></div>
     <div id="blue-arrow"></div>
   </div>
+  <button id="update-button">Update</button>
   <script>
-    // Set the input lat and long values
-    var inputLat = 23.495882;
-    var inputLong =121.391183;
-
-    // Get the current location using geolocation API
-    /*if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(function(position) {
-        var currentLat = position.coords.latitude;
-        var currentLong = position.coords.longitude;
-
-        // Calculate the bearing from the current location to the input location
-        var y = Math.sin(inputLong - currentLong) * Math.cos(inputLat);
-        var x = Math.cos(currentLat) * Math.sin(inputLat) -
-                Math.sin(currentLat) * Math.cos(inputLat) * Math.cos(inputLong - currentLong);
-        var bearing = Math.atan2(y, x) * (180 / Math.PI);
-
-        document.querySelector("#blue-arrow").style.transform = "translate(-50%, -50%) rotate(" + bearing + "deg)";
-      });
-    } else {
-      alert("Geolocation is not supported by your browser.");
-    }*/
-
     if (window.DeviceOrientationEvent) {
       window.addEventListener("deviceorientation", function(event) {
         var alpha = event.alpha;
         document.querySelector("#red-arrow").style.transform = "translate(-50%, -50%) rotate(" + alpha + "deg)";
-        
-        var currentLat = position.coords.latitude;
-        var currentLong = position.coords.longitude;
-
-        // Calculate the bearing from the current location to the input location
-        if (navigator.geolocation) {
-                                      navigator.geolocation.getCurrentPosition(function(position) {
-                                        var currentLat = position.coords.latitude;
-                                        var currentLong = position.coords.longitude;
-
-                                        // Calculate the bearing from the current location to the input location
-                                        var y = Math.sin(inputLong - currentLong) * Math.cos(inputLat);
-                                        var x = Math.cos(currentLat) * Math.sin(inputLat) -
-                                                Math.sin(currentLat) * Math.cos(inputLat) * Math.cos(inputLong - currentLong);
-                                        var bearing = Math.atan2(y, x) * (180 / Math.PI);
-
-                                        document.querySelector("#blue-arrow").style.transform = "translate(-50%, -50%) rotate(" + bearing + "deg)";
-                                      });
-                                    } else {
-                                      alert("Geolocation is not supported by your browser.");
-                                    }
       });
     } else {
       alert("Device orientation events are not supported on your device/browser.");
+    }
+    document.querySelector("#update-button").addEventListener("click", function() {
+      // Input latitude and longitude here
+      var lat = 37.7749;
+      var long = -122.4194;
+
+      // Calculate the heading to the input latitude and longitude
+      var heading = calculateHeading(lat, long);
+      document.querySelector("#blue-arrow").style.transform = "translate(-50%, -50%) rotate(" + heading + "deg)";
+    });
+    function calculateHeading(lat, long) {
+      // Implementation of heading calculation here
     }
   </script>
 </body>
