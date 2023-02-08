@@ -33,10 +33,6 @@
       left: 50%;
       transform: translate(-50%, -50%) rotate(0deg);
     }
-    button {
-      display: block;
-      margin: 20px auto;
-    }
   </style>
 </head>
 <body>
@@ -44,7 +40,6 @@
     <div id="red-arrow"></div>
     <div id="blue-arrow"></div>
   </div>
-  <button id="update-button">Update</button>
   <script>
     if (window.DeviceOrientationEvent) {
       window.addEventListener("deviceorientation", function(event) {
@@ -54,18 +49,50 @@
     } else {
       alert("Device orientation events are not supported on your device/browser.");
     }
-    document.querySelector("#update-button").addEventListener("click", function() {
-      // Input latitude and longitude here
-      var lat = 23.495882;
-      var long = 121.391183;
+    
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(function(position) {
+        var currentLat = position.coords.latitude;
+        var currentLong = position.coords.longitude;
+        var lat = 23.495882;
+        var long = 121.391183;
+        
+        lat1 = toRadians(currentLat);
+        lat2 = toRadians(lat);
+        lon1 = toRadians(currentLong);
+        lon2 = toRadians(long);
 
-      // Calculate the heading to the input latitude and longitude
-      var heading = calculateHeading(lat, long);
-      document.querySelector("#blue-arrow").style.transform = "translate(-50%, -50%) rotate(" + heading + "deg)";
-    });
-    function calculateHeading(lat, long) {
-      // Implementation of heading calculation here
+        // Calculate the difference between the two longitudes
+        var deltaLon = lon2 - lon1;
+
+        // Calculate the heading using the formula
+        var heading = Math.atan2(Math.sin(deltaLon) * Math.cos(lat2),
+                              Math.cos(lat1) * Math.sin(lat2) - Math.sin(lat1) * Math.cos(lat2) * Math.cos(deltaLon));
+
+        // Convert the heading to degrees
+        heading = toDegrees(heading);
+
+        // Make sure the heading is between 0 and 360 degrees
+        heading = (heading + 360) % 360;
+
+        document.querySelector("#blue-arrow").style.transform = "translate(-50%, -50%) rotate(" + heading + "deg)";
+      });
+    } else {
+      alert("Geolocation is not supported by your browser.");
     }
+
+    // Function to convert degrees to radians
+    function toRadians(degrees) {
+      return degrees * (Math.PI / 180);
+    }
+
+    // Function to convert radians to degrees
+    function toDegrees(radians) {
+      return radians * (180 / Math.PI);
+    }
+    
+    
+    
   </script>
 </body>
 </html>
