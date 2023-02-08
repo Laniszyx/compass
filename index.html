@@ -1,37 +1,40 @@
+<!DOCTYPE html>
 <html>
 <head>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="UTF-8">
+  <title>Compass App</title>
   <style>
-    .compass {
-      width: 200px;
-      height: 200px;
-      border-radius: 50%;
-      border: solid 2px black;
+    #compass {
+      width: 300px;
+      height: 300px;
+      border: 1px solid black;
       position: relative;
-      margin: 0 auto;
     }
-    .compass:before {
-      content: "";
-      width: 10px;
-      height: 10px;
-      border-radius: 50%;
-      background-color: red;
+    #arrow {
+      width: 0;
+      height: 0;
+      border-left: 50px solid transparent;
+      border-right: 50px solid transparent;
+      border-bottom: 100px solid red;
       position: absolute;
-      top: 95px;
-      left: 95px;
-      transform: rotate(0deg);
-      transition: transform 0.2s ease-in-out;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) rotate(0deg);
     }
   </style>
 </head>
 <body>
-  <div class="compass"></div>
+  <div id="compass">
+    <div id="arrow"></div>
+  </div>
   <script>
     if (window.DeviceOrientationEvent) {
       window.addEventListener("deviceorientation", function(event) {
-        var compass = document.querySelector(".compass:before");
-        compass.style.transform = "rotate(" + event.alpha + "deg)";
+        var alpha = event.alpha;
+        document.querySelector("#arrow").style.transform = "translate(-50%, -50%) rotate(" + alpha + "deg)";
       });
+    } else {
+      alert("Device orientation events are not supported on your device/browser.");
     }
   </script>
 </body>
