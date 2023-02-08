@@ -10,23 +10,27 @@
       border: 1px solid black;
       position: relative;
     }
-    #red-arrow, #blue-arrow {
+    #red-arrow {
       width: 0;
       height: 0;
       border-left: 50px solid transparent;
       border-right: 50px solid transparent;
-      border-bottom: 100px solid transparent;
+      border-bottom: 100px solid red;
       position: absolute;
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%) rotate(0deg);
-      transform-origin: center bottom;
-    }
-    #red-arrow {
-      border-bottom-color: red;
     }
     #blue-arrow {
-      border-bottom-color: blue;
+      width: 0;
+      height: 0;
+      border-left: 50px solid transparent;
+      border-right: 50px solid transparent;
+      border-bottom: 100px solid blue;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) rotate(0deg);
     }
   </style>
 </head>
@@ -36,27 +40,35 @@
     <div id="blue-arrow"></div>
   </div>
   <script>
-    // user input latitude and longitude
-    var lat = 23.495882;
-    var lon = 121.391183;
+    // Set the input lat and long values
+    var inputLat = 23.495882;
+    var inputLong =121.391183;
+
+    // Get the current location using geolocation API
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(function(position) {
+        var currentLat = position.coords.latitude;
+        var currentLong = position.coords.longitude;
+
+        // Calculate the bearing from the current location to the input location
+        var y = Math.sin(inputLong - currentLong) * Math.cos(inputLat);
+        var x = Math.cos(currentLat) * Math.sin(inputLat) -
+                Math.sin(currentLat) * Math.cos(inputLat) * Math.cos(inputLong - currentLong);
+        var bearing = Math.atan2(y, x) * (180 / Math.PI);
+
+        document.querySelector("#blue-arrow").style.transform = "translate(-50%, -50%) rotate(" + bearing + "deg)";
+      });
+    } else {
+      alert("Geolocation is not supported by your browser.");
+    }
 
     if (window.DeviceOrientationEvent) {
       window.addEventListener("deviceorientation", function(event) {
         var alpha = event.alpha;
         document.querySelector("#red-arrow").style.transform = "translate(-50%, -50%) rotate(" + alpha + "deg)";
-
-        // calculate the angle towards the target latitude and longitude
-        var angle = calculateAngle(alpha, lat, lon);
-        document.querySelector("#blue-arrow").style.transform = "translate(-50%, -50%) rotate(" + angle + "deg)";
       });
     } else {
       alert("Device orientation events are not supported on your device/browser.");
-    }
-
-    // function to calculate the angle towards the target latitude and longitude
-    function calculateAngle(alpha, lat, lon) {
-      // your implementation here
-      // you can use libraries such as geo-calc or haversine to help with the calculation
     }
   </script>
 </body>
