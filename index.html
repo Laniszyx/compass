@@ -71,12 +71,22 @@
         var currentLong = position.coords.longitude;
 
         // Calculate the bearing from the current location to the input location
-        var y = Math.sin(inputLong - currentLong) * Math.cos(inputLat);
-        var x = Math.cos(currentLat) * Math.sin(inputLat) -
-                Math.sin(currentLat) * Math.cos(inputLat) * Math.cos(inputLong - currentLong);
-        var bearing = Math.atan2(y, x) * (180 / Math.PI);
+        if (navigator.geolocation) {
+                                      navigator.geolocation.getCurrentPosition(function(position) {
+                                        var currentLat = position.coords.latitude;
+                                        var currentLong = position.coords.longitude;
 
-        document.querySelector("#blue-arrow").style.transform = "translate(-50%, -50%) rotate(" + bearing + "deg)";
+                                        // Calculate the bearing from the current location to the input location
+                                        var y = Math.sin(inputLong - currentLong) * Math.cos(inputLat);
+                                        var x = Math.cos(currentLat) * Math.sin(inputLat) -
+                                                Math.sin(currentLat) * Math.cos(inputLat) * Math.cos(inputLong - currentLong);
+                                        var bearing = Math.atan2(y, x) * (180 / Math.PI);
+
+                                        document.querySelector("#blue-arrow").style.transform = "translate(-50%, -50%) rotate(" + bearing + "deg)";
+                                      });
+                                    } else {
+                                      alert("Geolocation is not supported by your browser.");
+                                    }
       });
     } else {
       alert("Device orientation events are not supported on your device/browser.");
