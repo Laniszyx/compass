@@ -1,0 +1,38 @@
+<html>
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    .compass {
+      width: 200px;
+      height: 200px;
+      border-radius: 50%;
+      border: solid 2px black;
+      position: relative;
+      margin: 0 auto;
+    }
+    .compass:before {
+      content: "";
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background-color: red;
+      position: absolute;
+      top: 95px;
+      left: 95px;
+      transform: rotate(0deg);
+      transition: transform 0.2s ease-in-out;
+    }
+  </style>
+</head>
+<body>
+  <div class="compass"></div>
+  <script>
+    if (window.DeviceOrientationEvent) {
+      window.addEventListener("deviceorientation", function(event) {
+        var compass = document.querySelector(".compass:before");
+        compass.style.transform = "rotate(" + event.alpha + "deg)";
+      });
+    }
+  </script>
+</body>
+</html>
