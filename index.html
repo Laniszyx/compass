@@ -10,50 +10,53 @@
       border: 1px solid black;
       position: relative;
     }
-    #arrow {
+    #red-arrow, #blue-arrow {
       width: 0;
-      height: 5;
+      height: 0;
       border-left: 50px solid transparent;
       border-right: 50px solid transparent;
-      border-bottom: 100px solid red;
+      border-bottom: 100px solid transparent;
       position: absolute;
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%) rotate(0deg);
+      transform-origin: center bottom;
     }
-    #degree {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -100%);
-      font-size: 20px;
-      text-align: center;
+    #red-arrow {
+      border-bottom-color: red;
+    }
+    #blue-arrow {
+      border-bottom-color: blue;
     }
   </style>
 </head>
 <body>
   <div id="compass">
-    <div id="arrow"></div>
-    <div id="degree">0°</div>
+    <div id="red-arrow"></div>
+    <div id="blue-arrow"></div>
   </div>
   <script>
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(function(position) {
-        var lat1 = position.coords.latitude;
-        var lon1 = position.coords.longitude;
+    // user input latitude and longitude
+    var lat = 23.495882;
+    var lon = 121.391183;
 
-        // Example target position
-        var lat2 = 23.495882;
-        var lon2 = 121.391183;
+    if (window.DeviceOrientationEvent) {
+      window.addEventListener("deviceorientation", function(event) {
+        var alpha = event.alpha;
+        document.querySelector("#red-arrow").style.transform = "translate(-50%, -50%) rotate(" + alpha + "deg)";
 
-        var y = Math.sin(lon2 - lon1) * Math.cos(lat2);
-        var x = Math.cos(lat1) * Math.sin(lat2) - Math.sin(lat1) * Math.cos(lat2) * Math.cos(lon2 - lon1);
-        var bearing = Math.atan2(y, x) * (180 / Math.PI);
-        document.querySelector("#arrow").style.transform = "translate(-50%, -50%) rotate(" + (360 - bearing) + "deg)";
-        document.querySelector("#degree").innerText = Math.round(bearing) + "°";
+        // calculate the angle towards the target latitude and longitude
+        var angle = calculateAngle(alpha, lat, lon);
+        document.querySelector("#blue-arrow").style.transform = "translate(-50%, -50%) rotate(" + angle + "deg)";
       });
     } else {
-      alert("Geolocation is not supported on your device/browser.");
+      alert("Device orientation events are not supported on your device/browser.");
+    }
+
+    // function to calculate the angle towards the target latitude and longitude
+    function calculateAngle(alpha, lat, lon) {
+      // your implementation here
+      // you can use libraries such as geo-calc or haversine to help with the calculation
     }
   </script>
 </body>
