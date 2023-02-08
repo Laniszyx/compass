@@ -10,22 +10,13 @@
       border: 1px solid black;
       position: relative;
     }
-    #arrow {
-      width: 0;
-      height: 0;
-      border-left: 50px solid transparent;
-      border-right: 50px solid transparent;
-      border-bottom: 100px solid red;
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%) rotate(0deg);
-    }
   </style>
 </head>
 <body>
   <div id="compass">
-    <div id="arrow"></div>
+    <svg id="arrow" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+      <path id="arrow-path" d="M50,0 L100,50 L50,100 L0,50 Z" fill="red"/>
+    </svg>
   </div>
   <script>
     if (window.DeviceOrientationEvent) {
@@ -39,3 +30,6 @@
   </script>
 </body>
 </html>
+
+
+
