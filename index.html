@@ -12,7 +12,7 @@
     }
     #arrow {
       width: 0;
-      height: 0;
+      height: 5;
       border-left: 50px solid transparent;
       border-right: 50px solid transparent;
       border-bottom: 100px solid red;
@@ -37,14 +37,23 @@
     <div id="degree">0°</div>
   </div>
   <script>
-    if (window.DeviceOrientationEvent) {
-      window.addEventListener("deviceorientation", function(event) {
-        var alpha = event.alpha;
-        document.querySelector("#arrow").style.transform = "translate(-50%, -50%) rotate(" + alpha + "deg)";
-        document.querySelector("#degree").innerText = Math.round(alpha) + "°";
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(function(position) {
+        var lat1 = position.coords.latitude;
+        var lon1 = position.coords.longitude;
+
+        // Example target position
+        var lat2 = 23.586929;
+        var lon2 = 120.565852;
+
+        var y = Math.sin(lon2 - lon1) * Math.cos(lat2);
+        var x = Math.cos(lat1) * Math.sin(lat2) - Math.sin(lat1) * Math.cos(lat2) * Math.cos(lon2 - lon1);
+        var bearing = Math.atan2(y, x) * (180 / Math.PI);
+        document.querySelector("#arrow").style.transform = "translate(-50%, -50%) rotate(" + (360 - bearing) + "deg)";
+        document.querySelector("#degree").innerText = Math.round(bearing) + "°";
       });
     } else {
-      alert("Device orientation events are not supported on your device/browser.");
+      alert("Geolocation is not supported on your device/browser.");
     }
   </script>
 </body>
