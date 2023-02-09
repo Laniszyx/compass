@@ -1,101 +1,46 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <meta charset="UTF-8">
-  <title>Compass App</title>
   <style>
-
     #compass {
-      text-align: center;
       width: 300px;
       height: 300px;
-      border: 2px solid black;
-      margin: 0 auto;
+      border-radius: 50%;
+      border: 10px solid gray;
       position: relative;
     }
-    #red-arrow {
+
+    #needle {
       width: 0;
       height: 0;
       border-left: 10px solid transparent;
       border-right: 10px solid transparent;
-      border-bottom: 100px solid red;
+      border-top: 100px solid red;
       position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%) rotate(0deg);
-    }
-    #blue-arrow {
-      width: 0;
-      height: 0;
-      border-left: 10px solid transparent;
-      border-right: 10px solid transparent;
-      border-bottom: 100px solid blue;
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%) rotate(0deg);
+      top: 140px;
+      left: 125px;
     }
   </style>
 </head>
 <body>
-<center><h1>心願指針</h1>
-<p>請將紅色指針指向N,藍色指針將指向你心之所向.</p></center>
   <div id="compass">
-  	<h3>N</h3>
-    <div id="red-arrow"></div>
-    <div id="blue-arrow"></div>
+    <div id="needle"></div>
   </div>
+
   <script>
     if (window.DeviceOrientationEvent) {
+      // Your code here
       window.addEventListener("deviceorientation", function(event) {
-        var alpha = event.alpha;
-        document.querySelector("#red-arrow").style.transform = "translate(-50%, -50%) rotate(" + alpha + "deg)";
-      });
+      var alpha = event.alpha;
+
+      if (alpha !== null) {
+        document.getElementById("needle").style.transform =
+          "rotate(" + alpha + "deg)";
+      }
+    });
     } else {
-      alert("Device orientation events are not supported on your device/browser.");
+      alert("Your device does not support the Device Orientation API");
     }
-    
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(function(position) {
-        var currentLat = position.coords.latitude;
-        var currentLong = position.coords.longitude;
-        var lat = 23.586726;
-        var long = 120.566086;
-        
-        lat1 = toRadians(currentLat);
-        lat2 = toRadians(lat);
-        lon1 = toRadians(currentLong);
-        lon2 = toRadians(long);
-
-        // Calculate the difference between the two longitudes
-        var deltaLon = lon2 - lon1;
-
-        // Calculate the heading using the formula
-        var heading = Math.atan2(Math.sin(deltaLon) * Math.cos(lat2),
-                              Math.cos(lat1) * Math.sin(lat2) - Math.sin(lat1) * Math.cos(lat2) * Math.cos(deltaLon));
-
-        // Convert the heading to degrees
-        heading = toDegrees(heading);
-
-        // Make sure the heading is between 0 and 360 degrees
-        heading = (heading + 360) % 360;
-
-        document.querySelector("#blue-arrow").style.transform = "translate(-50%, -50%) rotate(" + heading + "deg)";
-      });
-    } else {
-      alert("Geolocation is not supported by your browser.");
-    }
-
-    // Function to convert degrees to radians
-    function toRadians(degrees) {
-      return degrees * (Math.PI / 180);
-    }
-
-    // Function to convert radians to degrees
-    function toDegrees(radians) {
-      return radians * (180 / Math.PI);
-    }
-    
     
     
   </script>
